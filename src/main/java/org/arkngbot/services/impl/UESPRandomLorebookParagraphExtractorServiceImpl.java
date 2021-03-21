@@ -1,5 +1,6 @@
 package org.arkngbot.services.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.arkngbot.services.JsoupDocumentRetrievalService;
 import org.arkngbot.services.UESPRandomLorebookParagraphExtractorService;
 import org.jsoup.nodes.Document;
@@ -48,7 +49,7 @@ public class UESPRandomLorebookParagraphExtractorServiceImpl implements UESPRand
         List<Element> paragraphs = Optional.ofNullable(bookBody)
                 .map(bb -> bb.getElementsByTag(P_TAG))
                 .map(bb -> bb.stream()
-                .filter(p -> !p.text().isBlank())
+                .filter(p -> !StringUtils.isBlank(p.text()))
                 .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
 
