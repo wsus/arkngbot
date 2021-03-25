@@ -24,6 +24,8 @@ public class UESPRandomLorebookParagraphExtractorServiceImpl implements UESPRand
     private static final String BOOK_CLASS = "book";
     private static final String P_TAG = "p";
     private static final String UESP_BOOKS_URL = "https://en.uesp.net/w/index.php?title=Special%3AWhatLinksHere&limit=9999&target=Template%3ALore+Book&namespace=130";
+    private static final int MAX_MESSAGE_LENGTH = 2000;
+    private static final int BEGIN_INDEX = 0;
 
     private final JsoupDocumentRetrievalService jsoupDocumentRetrievalService;
 
@@ -46,12 +48,7 @@ public class UESPRandomLorebookParagraphExtractorServiceImpl implements UESPRand
 
         Document book = jsoupDocumentRetrievalService.retrieve(UESP_URL + relativeUrl);
         Element bookBody = book.getElementsByClass(BOOK_CLASS).first();
-        List<Element> paragraphs = Optional.ofNullable(bookBody)
-                .map(bb -> bb.getElementsByTag(P_TAG))
-                .map(bb -> bb.stream()
-                .filter(p -> !StringUtils.isBlank(p.text()))
-                .collect(Collectors.toList()))
-                .orElse(new ArrayList<>());
+        List<Element> paragraphs = extractParagraphs(bookBody);
 
         if (paragraphs.isEmpty()) {
             // try another book if this one has no extractable tags
@@ -60,10 +57,27 @@ public class UESPRandomLorebookParagraphExtractorServiceImpl implements UESPRand
 
         Element randomParagraph = getRandomElement(paragraphs, randomizer);
 
-        return randomParagraph.text();
+        return truncateIfNeeded(randomParagraph.text());
+    }
+
+    private List<Element> extractParagraphs(Element bookBody) {
+        return Optional.ofNullable(bookBody)
+                .map(bb -> bb.getElementsByTag(P_TAG))
+                .map(bb -> bb.stream()
+                        .filter(p -> !StringUtils.isBlank(p.text()))
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
     }
 
     private <T> T getRandomElement(List<T> collection, Random randomizer) {
         return collection.get(randomizer.nextInt(collection.size()));
+    }
+
+    private String truncateIfNeeded(String text) {
+        if (text.length() > MAX_MESSAGE_LENGTH) {
+            return text.substring(BEGIN_INDEX, MAX_MESSAGE_LENGTH);
+        }
+
+        return text;
     }
 }

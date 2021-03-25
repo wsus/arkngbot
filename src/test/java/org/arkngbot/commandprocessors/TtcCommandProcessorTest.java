@@ -1,6 +1,6 @@
-package org.arkngbot.processors;
+package org.arkngbot.commandprocessors;
 
-import org.arkngbot.processors.impl.TtcCommandProcessor;
+import org.arkngbot.commandprocessors.impl.TtcCommandProcessor;
 import org.arkngbot.services.TTCSearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

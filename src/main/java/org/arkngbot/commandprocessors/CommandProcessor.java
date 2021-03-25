@@ -1,4 +1,4 @@
-package org.arkngbot.processors;
+package org.arkngbot.commandprocessors;
 
 import java.util.List;
 

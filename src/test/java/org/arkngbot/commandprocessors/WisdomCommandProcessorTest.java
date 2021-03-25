@@ -1,6 +1,6 @@
-package org.arkngbot.processors;
+package org.arkngbot.commandprocessors;
 
-import org.arkngbot.processors.impl.WisdomCommandProcessor;
+import org.arkngbot.commandprocessors.impl.WisdomCommandProcessor;
 import org.arkngbot.services.UESPRandomLorebookParagraphExtractorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
