@@ -1,6 +1,6 @@
-package org.arkngbot.processors.impl;
+package org.arkngbot.commandprocessors.impl;
 
-import org.arkngbot.processors.CommandProcessor;
+import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.TTCSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

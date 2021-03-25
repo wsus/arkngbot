@@ -1,6 +1,6 @@
 package org.arkngbot.services.impl;
 
-import org.arkngbot.processors.CommandProcessor;
+import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.CommandProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

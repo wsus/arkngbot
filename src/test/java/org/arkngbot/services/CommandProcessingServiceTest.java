@@ -1,6 +1,6 @@
 package org.arkngbot.services;
 
-import org.arkngbot.processors.CommandProcessor;
+import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.impl.CommandProcessingServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

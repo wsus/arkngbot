@@ -1,7 +1,7 @@
-package org.arkngbot.processors.impl;
+package org.arkngbot.commandprocessors.impl;
 
 import org.arkngbot.datastructures.UESPSearchResult;
-import org.arkngbot.processors.CommandProcessor;
+import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.UESPSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class WikiCommandProcessor implements CommandProcessor {
     private static final String SPACE = " ";
     private static final String UNIVERSAL_NEWLINE = "%n";
     private static final int MAX_SIZE = 5;
-    private static final String TOO_FEW_ARGUMENTS = "This command requires at least one argument!";
+    private static final String TOO_FEW_ARGUMENTS = "This command requires one argument!";
     private static final String ERROR_MESSAGE = "Something went wrong. Could not retrieve the results :frowning:";
     private static final String NO_RESULTS_FOUND = "Your query did not return any results.";
     private static final String RETURNING_FIRST_SEARCH_RESULTS = "Returning first %d search results:%n";

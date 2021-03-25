@@ -1,7 +1,7 @@
-package org.arkngbot.processors;
+package org.arkngbot.commandprocessors;
 
 import org.arkngbot.datastructures.UESPSearchResult;
-import org.arkngbot.processors.impl.WikiCommandProcessor;
+import org.arkngbot.commandprocessors.impl.WikiCommandProcessor;
 import org.arkngbot.services.UESPSearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class WikiCommandProcessorTest {
     private static final String NO_RESULTS_FOUND = "Your query did not return any results.";
     private static final String DIRECT_URL = "/directUrl";
     private static final String SEARCH_RESULT_URL = "/searchResultUrl";
-    private static final String TOO_FEW_ARGUMENTS = "This command requires at least one argument!";
+    private static final String TOO_FEW_ARGUMENTS = "This command requires one argument!";
     private static final String ERROR_MESSAGE = "Something went wrong. Could not retrieve the results :frowning:";
     private static final String WIKI = "wiki";
 
