@@ -1,11 +1,18 @@
 --------------------------------------
+Changelog for ArkngBot version 1.2
+--------------------------------------
+New features:
+- /arkng name can now be used without arguments to generate a name of a random race and sex,
+  and with one argument to generate a character of specified race and random sex
+  
+--------------------------------------
 Changelog for ArkngBot version 1.1
 --------------------------------------
 Bug fixes:
 - Fixed formatting of the /arkng help command
 - Fixed a crash which occurred when /arkng wisdom tried to post a paragraph longer than 2000 characters
 
-New features
+New features:
 - Greeter: Arkng will now greet new members of the servers it's on. The greeting will be posted
   to the system message channel
 - /arkng name: Generate a random lore-friendly Elder Scrolls character name from the pool of names
