@@ -7,6 +7,7 @@ import org.arkngbot.services.LoreNameGeneratorService;
 import org.arkngbot.services.impl.ArticleSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,13 +15,14 @@ import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class NameCommandProcessorTest {
 
     private static final String NAME_COMMAND = "name";
-    private static final String TOO_FEW_ARGUMENTS = "This command requires two arguments!";
     private static final String GENERATED_NAME_PATTERN = "Generated name of %s %s %s:\n%s";
     private static final String ERROR_MESSAGE = "Something went wrong. Could not generate the name :frowning:";
     private static final String INVALID_RACE_VALUE = "Invalid race value! Valid values are:";
@@ -58,10 +60,30 @@ public class NameCommandProcessorTest {
     }
 
     @Test
-    public void shouldNotProcessNameCommandTooFewArguments() {
+    public void shouldProcessNameWithNoArguments() throws Exception {
+        ArgumentCaptor<TESRace> raceCaptor = ArgumentCaptor.forClass(TESRace.class);
+        ArgumentCaptor<TESSex> sexCaptor = ArgumentCaptor.forClass(TESSex.class);
+
+        when(loreNameGeneratorService.generateLoreName(raceCaptor.capture(), sexCaptor.capture())).thenReturn(NAME);
+        when(articleSupport.determineIndefiniteArticle(any())).thenReturn(INDEF_ARTICLE_A);
+
+        String result = commandProcessor.processCommand(Collections.emptyList());
+
+        assertThat(result, is(String.format(GENERATED_NAME_PATTERN,
+                INDEF_ARTICLE_A, raceCaptor.getValue().getName(), sexCaptor.getValue().getName(), NAME)));
+    }
+
+    @Test
+    public void shouldProcessNameWithOneArgument() throws Exception {
+        ArgumentCaptor<TESSex> sexCaptor = ArgumentCaptor.forClass(TESSex.class);
+
+        when(loreNameGeneratorService.generateLoreName(eq(TESRace.BRETON), sexCaptor.capture())).thenReturn(NAME);
+        when(articleSupport.determineIndefiniteArticle(TESRace.BRETON.getName())).thenReturn(INDEF_ARTICLE_A);
+
         String result = commandProcessor.processCommand(Collections.singletonList(BRETON));
 
-        assertThat(result, is(TOO_FEW_ARGUMENTS));
+        assertThat(result, is(String.format(GENERATED_NAME_PATTERN,
+                INDEF_ARTICLE_A, TESRace.BRETON.getName(), sexCaptor.getValue().getName(), NAME)));
     }
 
     @Test

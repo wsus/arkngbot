@@ -1,6 +1,8 @@
 package org.arkngbot.datastructures.enums;
 
-public enum TESSex {
+import org.arkngbot.datastructures.NameAware;
+
+public enum TESSex implements NameAware {
     FEMALE ("Female"),
     MALE ("Male");
 
@@ -10,6 +12,7 @@ public enum TESSex {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
