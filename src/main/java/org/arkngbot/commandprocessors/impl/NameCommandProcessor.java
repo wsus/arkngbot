@@ -4,6 +4,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.arkngbot.commandprocessors.CommandProcessor;
+import org.arkngbot.datastructures.NameAware;
 import org.arkngbot.datastructures.enums.TESRace;
 import org.arkngbot.datastructures.enums.TESSex;
 import org.arkngbot.services.LoreNameGeneratorService;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class NameCommandProcessor implements CommandProcessor {
 
     private static final String NAME_COMMAND = "name";
-    private static final String TOO_FEW_ARGUMENTS = "This command requires two arguments!";
     private static final String GENERATED_NAME_PATTERN = "Generated name of %s %s %s:\n%s";
     private static final String ERROR_MESSAGE = "Something went wrong. Could not generate the name :frowning:";
     private static final String INVALID_RACE_VALUE = "Invalid race value! Valid values are:";
@@ -38,15 +39,13 @@ public class NameCommandProcessor implements CommandProcessor {
 
     @Override
     public String processCommand(List<String> args) {
-        if (args == null || args.size() < 2) {
-            return TOO_FEW_ARGUMENTS;
-        }
+        Random randomizer = new Random();
 
-        TESRace race = retrieveRaceCaseInsensitive(args.get(0));
+        TESRace race = retrieveEnumValueOrRandomize(args, TESRace.values(), 0, randomizer);
         if (race == null) {
             return buildInvalidRaceMessage();
         }
-        TESSex sex = retrieveSexCaseInsensitive(args.get(1));
+        TESSex sex = retrieveEnumValueOrRandomize(args, TESSex.values(), 1, randomizer);
         if (sex == null) {
             return buildInvalidSexMessage();
         }
@@ -67,18 +66,16 @@ public class NameCommandProcessor implements CommandProcessor {
         return NAME_COMMAND.equals(command);
     }
 
-    private TESRace retrieveRaceCaseInsensitive(String string) {
-        return Arrays.stream(TESRace.values())
-                .filter(v -> v.getName().equalsIgnoreCase(string))
-                .findFirst()
-                .orElse(null);
-    }
-
-    private TESSex retrieveSexCaseInsensitive(String string) {
-        return Arrays.stream(TESSex.values())
-                .filter(v -> v.getName().equalsIgnoreCase(string))
-                .findFirst()
-                .orElse(null);
+    private <T extends NameAware> T retrieveEnumValueOrRandomize(List<String> args, T[] values, int index, Random randomizer) {
+        if (args != null && args.size() > index) {
+            return Arrays.stream(values)
+                    .filter(v -> v.getName().equalsIgnoreCase(args.get(index)))
+                    .findFirst()
+                    .orElse(null);
+        }
+        else {
+            return getRandomElement(Arrays.asList(values), randomizer);
+        }
     }
 
     private String buildInvalidRaceMessage() {
@@ -93,5 +90,9 @@ public class NameCommandProcessor implements CommandProcessor {
         Arrays.stream(TESSex.values())
                 .forEach(v -> builder.append(String.format(VALUE_PATTERN, v.getName())));
         return builder.toString();
+    }
+
+    private <T> T getRandomElement(List<T> collection, Random randomizer) {
+        return collection.get(randomizer.nextInt(collection.size()));
     }
 }

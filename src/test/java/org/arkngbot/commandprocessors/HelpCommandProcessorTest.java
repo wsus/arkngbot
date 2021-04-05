@@ -17,7 +17,7 @@ public class HelpCommandProcessorTest {
             + "\n`/arkng ttc search <query>`: First tries to determine the item from the query using TTC's autocompletion feature, then returns a link to the search results of that item."
             + "\n`/arkng ttc price <query>`: First tries to determine the item from the query using TTC's autocompletion feature, then returns a price check for that item."
             + "\n`/arkng help`: Returns the list of all commands."
-            + "\n`/arkng name <race> <sex>`: Generates a random lore-friendly Elder Scrolls name out of the name pool from the games and lore collected by the UESP. Whether a family name will be generated depends on the race. `ashlander` and `reachman` are available as races since they have different naming patterns."
+            + "\n`/arkng name [race] [sex]`: Generates a random lore-friendly Elder Scrolls name out of the name pool from the games and lore collected by the UESP. Whether a family name will be generated depends on the race. `ashlander` and `reachman` are available as races since they have different naming patterns. If sex or race are not given, they will be chosen randomly."
             + "\n`/arkng version`: Shows the current version of Arkng.";
     private static final String HELP = "help";
     private static final String OTHER = "other";

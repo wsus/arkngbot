@@ -1,6 +1,8 @@
 package org.arkngbot.datastructures.enums;
 
-public enum TESRace {
+import org.arkngbot.datastructures.NameAware;
+
+public enum TESRace implements NameAware {
 
     ALTMER ("Altmer", false),
     ARGONIAN ("Argonian", false),
@@ -24,6 +26,7 @@ public enum TESRace {
         this.hasSurname = hasSurname;
     }
 
+    @Override
     public String getName() {
         return name;
     }
