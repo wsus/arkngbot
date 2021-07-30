@@ -1,10 +1,14 @@
 package org.arkngbot.services;
 
+import org.springframework.lang.NonNull;
+
 import java.io.IOException;
 
 public interface TTCSearchService {
 
-    String search(String query);
+    @NonNull
+    String search(@NonNull String query);
 
-    String checkPrice(String query) throws IOException;
+    @NonNull
+    String checkPrice(@NonNull String query) throws IOException;
 }

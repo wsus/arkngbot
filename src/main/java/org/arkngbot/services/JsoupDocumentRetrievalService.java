@@ -1,6 +1,7 @@
 package org.arkngbot.services;
 
 import org.jsoup.nodes.Document;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 
@@ -16,5 +17,6 @@ public interface JsoupDocumentRetrievalService {
      * @return the retrieved document
      * @throws IOException if something goes wrong
      */
+    @NonNull
     Document retrieve(String url) throws IOException;
 }
