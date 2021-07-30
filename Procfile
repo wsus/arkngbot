@@ -1,1 +1,1 @@
-worker: java -jar target/arkngbot-1.2.jar $TOKEN
+worker: java -jar target/arkngbot-2.0.jar $TOKEN
