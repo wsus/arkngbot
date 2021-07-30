@@ -1,6 +1,7 @@
 package org.arkngbot.services;
 
 import org.arkngbot.datastructures.UESPSearchResult;
+import org.springframework.lang.NonNull;
 
 /**
  * A service for searching the UESP wiki.
@@ -13,5 +14,6 @@ public interface UESPSearchService {
      * @return the search result containing a list of result URLs and a flag indicating if there was a direct hit
      * @throws Exception in case any exception was thrown
      */
-    UESPSearchResult searchUESP(String query) throws Exception;
+    @NonNull
+    UESPSearchResult searchUESP(@NonNull String query) throws Exception;
 }

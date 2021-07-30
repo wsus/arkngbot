@@ -1,11 +1,12 @@
 package org.arkngbot.commandprocessors;
 
+import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.discordjson.json.ApplicationCommandOptionData;
+import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.impl.VersionCommandProcessor;
 import org.arkngbot.services.impl.PropertiesSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -18,6 +19,8 @@ public class VersionCommandProcessorTest {
     private static final String VERSION_PROPERTY_KEY = "arkngbot.version";
     private static final String VERSION_COMMAND = "version";
     private static final String CURRENT_VERSION = "x.y";
+    private static final String VERSION_COMMAND_DESCRIPTION = "See Arkng's current version";
+
 
     private CommandProcessor commandProcessor;
 
@@ -34,7 +37,7 @@ public class VersionCommandProcessorTest {
     public void shouldProcessNameCommand() {
         when(propertiesSupport.getProperty(VERSION_PROPERTY_KEY)).thenReturn(CURRENT_VERSION);
 
-        String message = commandProcessor.processCommand(new ArrayList<>());
+        String message = commandProcessor.processCommand(mock(ApplicationCommandInteractionOption.class));
 
         assertThat(message, is(VERSION_MESSAGE));
     }
@@ -51,5 +54,14 @@ public class VersionCommandProcessorTest {
         boolean supports = commandProcessor.supports(CURRENT_VERSION);
 
         assertThat(supports, is(false));
+    }
+
+    @Test
+    public void shouldBuildRequest() {
+        ApplicationCommandOptionData request = commandProcessor.buildRequest();
+
+        assertThat(request.name(), is(VERSION_COMMAND));
+        assertThat(request.description(), is(VERSION_COMMAND_DESCRIPTION));
+        assertThat(request.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
     }
 }

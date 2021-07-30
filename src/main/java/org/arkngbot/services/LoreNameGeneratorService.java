@@ -2,6 +2,7 @@ package org.arkngbot.services;
 
 import org.arkngbot.datastructures.enums.TESRace;
 import org.arkngbot.datastructures.enums.TESSex;
+import org.springframework.lang.NonNull;
 
 /**
  * A service for generating lore-friendly TES character names.
@@ -17,5 +18,6 @@ public interface LoreNameGeneratorService {
      * @return The generated name.
      * @throws Exception if anything goes wrong.
      */
-    String generateLoreName(TESRace race, TESSex sex) throws Exception;
+    @NonNull
+    String generateLoreName(@NonNull TESRace race, @NonNull TESSex sex) throws Exception;
 }

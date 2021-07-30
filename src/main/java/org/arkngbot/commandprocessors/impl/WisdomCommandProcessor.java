@@ -1,17 +1,19 @@
 package org.arkngbot.commandprocessors.impl;
 
+import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.discordjson.json.ApplicationCommandOptionData;
+import discord4j.rest.util.ApplicationCommandOptionType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.UESPRandomLorebookParagraphExtractorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
- * Processes a /wisdom command.
+ * Processes a wisdom command.
  */
 @Service
 public class WisdomCommandProcessor implements CommandProcessor {
@@ -19,6 +21,7 @@ public class WisdomCommandProcessor implements CommandProcessor {
     private static final String WISDOM_COMMAND = "wisdom";
     private static final String ERROR_MESSAGE = "Something went wrong. Could not retrieve the wisdom :frowning:";
     private static final Logger LOGGER = LogManager.getLogger(WisdomCommandProcessor.class);
+    private static final String WISDOM_COMMAND_DESCRIPTION = "Ask Arkng for a random lorebook paragraph";
 
     private final UESPRandomLorebookParagraphExtractorService uespRandomLorebookParagraphExtractorService;
 
@@ -27,8 +30,9 @@ public class WisdomCommandProcessor implements CommandProcessor {
         this.uespRandomLorebookParagraphExtractorService = uespRandomLorebookParagraphExtractorService;
     }
 
+    @NonNull
     @Override
-    public String processCommand(List<String> args) {
+    public String processCommand(ApplicationCommandInteractionOption command) {
         try {
             return uespRandomLorebookParagraphExtractorService.extractRandomLorebookParagraph();
         }
@@ -41,5 +45,15 @@ public class WisdomCommandProcessor implements CommandProcessor {
     @Override
     public boolean supports(String command) {
         return WISDOM_COMMAND.equals(command);
+    }
+
+    @NonNull
+    @Override
+    public ApplicationCommandOptionData buildRequest() {
+        return ApplicationCommandOptionData.builder()
+                .name(WISDOM_COMMAND)
+                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .description(WISDOM_COMMAND_DESCRIPTION)
+                .build();
     }
 }

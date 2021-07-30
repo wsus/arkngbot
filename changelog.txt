@@ -1,4 +1,17 @@
 --------------------------------------
+Changelog for ArkngBot version 2.0
+--------------------------------------
+New features:
+- Slash command API: Arkng is now fully integrated with Discord's slash command API. Now it's easier than ever
+  to use its commands.
+- /arkng pledges: Check the current Undaunted pledges.
+- /arkng luxury: Check the inventory of the luxury furnisher.
+- /arkng golden: Check the inventory of the golden merchant.
+- /arkng servers: Check the status of the megaservers.
+
+The new commands are powered by ESOHub.com.
+
+--------------------------------------
 Changelog for ArkngBot version 1.2
 --------------------------------------
 New features:
@@ -18,4 +31,3 @@ New features:
 - /arkng name: Generate a random lore-friendly Elder Scrolls character name from the pool of names
   collected from the games and lore by the UESP.
 - /arkng version: Check Arkng's current version.
-
