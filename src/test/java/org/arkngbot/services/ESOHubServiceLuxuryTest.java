@@ -31,6 +31,9 @@ public class ESOHubServiceLuxuryTest {
     private static final String PRICE_1 = "100 Gold";
     private static final String PRICE_2 = "1000 Gold";
     private static final String FURNISHER_NOT_PRESENT = "The Luxury Furnisher is not currently present.";
+    private static final int WEEK_30 = 30;
+    private static final String NO_DATA_FOR_CURRENT_WEEK = "Could not find data for the current week. Please try again later.";
+
 
     ESOHubService esoHubService;
 
@@ -68,6 +71,18 @@ public class ESOHubServiceLuxuryTest {
         assertThat(pledgesInfo, is(FURNISHER_NOT_PRESENT));
     }
 
+    @Test
+    public void shouldNotReturnLuxuryFurnishingsNoData() throws Exception {
+        Document page = mock(Document.class);
+        when(page.getElementsContainingOwnText(CURRENT_WEEK)).thenReturn(new Elements());;
+        mockTime(MONDAY_MORNING);
+        when(jsoupDocumentRetrievalServiceMock.retrieve(ESO_HUB_LUXURY_FURNISHER_URL)).thenReturn(page);
+
+        String pledgesInfo = esoHubService.checkLuxuryFurnishings();
+
+        assertThat(pledgesInfo, is(NO_DATA_FOR_CURRENT_WEEK));
+    }
+
     private void mockFlow(Document mainPage) {
         Element currentWeekCardHeader = new Element(DIV_TAG);
         Element parent = new Element(DIV_TAG);
@@ -99,5 +114,6 @@ public class ESOHubServiceLuxuryTest {
     private void mockTime(LocalDateTime time) {
         when(timeSupportMock.getCurrentTimeInUTC()).thenReturn(time);
         when(timeSupportMock.getCurrentDateInUTC()).thenReturn(time.toLocalDate());
+        when(timeSupportMock.calculateWeekNumber(time.toLocalDate())).thenReturn(WEEK_30);
     }
 }
