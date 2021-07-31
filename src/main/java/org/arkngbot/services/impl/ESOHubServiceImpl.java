@@ -1,7 +1,5 @@
 package org.arkngbot.services.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.arkngbot.services.ESOHubService;
 import org.arkngbot.services.JsoupDocumentRetrievalService;
 import org.jsoup.nodes.Document;
@@ -15,10 +13,7 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.EnumSet;
-import java.util.GregorianCalendar;
 
 @Service
 public class ESOHubServiceImpl implements ESOHubService {
@@ -56,7 +51,7 @@ public class ESOHubServiceImpl implements ESOHubService {
     private static final String GREEN_DOT_CSS = "background-color: #559525";
     private static final String STATUS_UP = "up";
     private static final String STATUS_DOWN = "down";
-    private static final Logger LOGGER = LogManager.getLogger(ESOHubServiceImpl.class);
+    private static final String NO_DATA_FOR_CURRENT_WEEK = "Could not find data for the current week. Please try again later.";
 
     private final JsoupDocumentRetrievalService jsoupDocumentRetrievalService;
     private final TimeSupport timeSupport;
@@ -107,11 +102,7 @@ public class ESOHubServiceImpl implements ESOHubService {
     private String getCurrentWeek() {
         LocalDate currentDate = timeSupport.getCurrentDateInUTC();
         int year = currentDate.getYear();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date());
-        int week = calendar.get(Calendar.WEEK_OF_YEAR);
-        LOGGER.info(new Date());
-        LOGGER.info(String.format(CURRENT_WEEK_PATTERN, week, year));
+        int week = timeSupport.calculateWeekNumber(currentDate);
         return String.format(CURRENT_WEEK_PATTERN, week, year);
     }
 
@@ -119,6 +110,10 @@ public class ESOHubServiceImpl implements ESOHubService {
         Document luxuryFurnisherPage = jsoupDocumentRetrievalService.retrieve(ESO_HUB_LUXURY_FURNISHER_URL);
 
         Element currentWeekCard = findCurrentWeekCard(luxuryFurnisherPage);
+
+        if (currentWeekCard == null) {
+            return NO_DATA_FOR_CURRENT_WEEK;
+        }
 
         StringBuilder responseBuilder = new StringBuilder(LUXURY_HEADER);
         currentWeekCard.getElementsByClass(ITEM_CLASS)
@@ -132,7 +127,7 @@ public class ESOHubServiceImpl implements ESOHubService {
                 .findFirst()
                 .map(Element::parent)
                 .map(Element::parent)
-                .orElseThrow(() -> new IllegalStateException(CANNOT_FIND_THE_CURRENT_WEEK_CARD));
+                .orElse(null);
     }
 
     private void appendLuxuryFurnishing(Element item, StringBuilder responseBuilder) {
@@ -160,6 +155,10 @@ public class ESOHubServiceImpl implements ESOHubService {
         Document goldenVendorPage = jsoupDocumentRetrievalService.retrieve(ESO_HUB_GOLDEN_VENDOR_URL);
 
         Element currentWeekCard = findCurrentWeekCard(goldenVendorPage);
+
+        if (currentWeekCard == null) {
+            return NO_DATA_FOR_CURRENT_WEEK;
+        }
 
         StringBuilder responseBuilder = new StringBuilder(GOLDEN_HEADER);
         currentWeekCard.getElementsByTag(TAG_TR)
