@@ -1,5 +1,7 @@
 package org.arkngbot.services.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.arkngbot.services.ESOHubService;
 import org.arkngbot.services.JsoupDocumentRetrievalService;
 import org.jsoup.nodes.Document;
@@ -54,6 +56,7 @@ public class ESOHubServiceImpl implements ESOHubService {
     private static final String GREEN_DOT_CSS = "background-color: #559525";
     private static final String STATUS_UP = "up";
     private static final String STATUS_DOWN = "down";
+    private static final Logger LOGGER = LogManager.getLogger(ESOHubServiceImpl.class);
 
     private final JsoupDocumentRetrievalService jsoupDocumentRetrievalService;
     private final TimeSupport timeSupport;
@@ -107,6 +110,8 @@ public class ESOHubServiceImpl implements ESOHubService {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         int week = calendar.get(Calendar.WEEK_OF_YEAR);
+        LOGGER.info(new Date());
+        LOGGER.info(String.format(CURRENT_WEEK_PATTERN, week, year));
         return String.format(CURRENT_WEEK_PATTERN, week, year);
     }
 
