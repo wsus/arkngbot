@@ -1,8 +1,8 @@
 package org.arkngbot.commandprocessors.impl;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.impl.PropertiesSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class VersionCommandProcessor implements CommandProcessor {
     public ApplicationCommandOptionData buildRequest() {
         return ApplicationCommandOptionData.builder()
                 .name(VERSION_COMMAND)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .description(VERSION_COMMAND_DESCRIPTION)
                 .build();
     }

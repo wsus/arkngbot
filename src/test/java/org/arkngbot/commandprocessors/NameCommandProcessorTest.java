@@ -2,8 +2,8 @@ package org.arkngbot.commandprocessors;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.impl.NameCommandProcessor;
 import org.arkngbot.datastructures.enums.TESRace;
 import org.arkngbot.datastructures.enums.TESSex;
@@ -139,19 +139,19 @@ public class NameCommandProcessorTest {
 
         assertThat(request.name(), is(NAME_COMMAND));
         assertThat(request.description(), is(NAME_COMMAND_DESCRIPTION));
-        assertThat(request.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
+        assertThat(request.type(), is(ApplicationCommandOption.Type.SUB_COMMAND.getValue()));
         assertThat(request.options().get(), hasSize(2));
 
         ApplicationCommandOptionData raceOption = request.options().get().get(0);
         assertThat(raceOption.name(), is(RACE_OPTION));
         assertThat(raceOption.description(), is(RACE_OPTION_DESCRIPTION));
-        assertThat(raceOption.type(), is(ApplicationCommandOptionType.STRING.getValue()));
+        assertThat(raceOption.type(), is(ApplicationCommandOption.Type.STRING.getValue()));
         assertThat(raceOption.required().isAbsent(), is(true));
 
         ApplicationCommandOptionData sexOption = request.options().get().get(1);
         assertThat(sexOption.name(), is(SEX_OPTION));
         assertThat(sexOption.description(), is(SEX_OPTION_DESCRIPTION));
-        assertThat(sexOption.type(), is(ApplicationCommandOptionType.STRING.getValue()));
+        assertThat(sexOption.type(), is(ApplicationCommandOption.Type.STRING.getValue()));
         assertThat(sexOption.required().isAbsent(), is(true));
     }
 

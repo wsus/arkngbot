@@ -1,10 +1,10 @@
 package org.arkngbot.services;
 
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.impl.SlashCommandRegisterServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,13 +54,13 @@ public class SlashCommandRegisterServiceTest {
         ApplicationCommandRequest request = captor.getValue();
 
         assertThat(request.name(), is(ARKNG_COMMAND));
-        assertThat(request.description(), is(ARKNG_COMMAND_DESCRIPTION));
+        assertThat(request.description().get(), is(ARKNG_COMMAND_DESCRIPTION));
         assertThat(request.options().get().size(), is(2));
-        verifyOption(request.options().get().get(0), MOCK_1, MOCK_DESC_1, ApplicationCommandOptionType.SUB_COMMAND);
-        verifyOption(request.options().get().get(1), MOCK_2, MOCK_DESC_2, ApplicationCommandOptionType.SUB_COMMAND_GROUP);
+        verifyOption(request.options().get().get(0), MOCK_1, MOCK_DESC_1, ApplicationCommandOption.Type.SUB_COMMAND);
+        verifyOption(request.options().get().get(1), MOCK_2, MOCK_DESC_2, ApplicationCommandOption.Type.SUB_COMMAND_GROUP);
     }
 
-    private void verifyOption(ApplicationCommandOptionData option, String name, String desc, ApplicationCommandOptionType type) {
+    private void verifyOption(ApplicationCommandOptionData option, String name, String desc, ApplicationCommandOption.Type type) {
         assertThat(option.name(), is(name));
         assertThat(option.description(), is(desc));
         assertThat(option.type(), is(type.getValue()));
@@ -73,12 +73,12 @@ public class SlashCommandRegisterServiceTest {
         when(commandProcessorMock1.buildRequest()).thenReturn(ApplicationCommandOptionData.builder()
                 .name(MOCK_1)
                 .description(MOCK_DESC_1)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .build());
         when(commandProcessorMock2.buildRequest()).thenReturn(ApplicationCommandOptionData.builder()
                 .name(MOCK_2)
                 .description(MOCK_DESC_2)
-                .type(ApplicationCommandOptionType.SUB_COMMAND_GROUP.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND_GROUP.getValue())
                 .build());
     }
 }

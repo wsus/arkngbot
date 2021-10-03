@@ -2,8 +2,8 @@ package org.arkngbot.commandprocessors;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.impl.WikiCommandProcessor;
 import org.arkngbot.datastructures.UESPSearchResult;
 import org.arkngbot.services.UESPSearchService;
@@ -118,13 +118,13 @@ public class WikiCommandProcessorTest {
 
         assertThat(request.name(), is(WIKI));
         assertThat(request.description(), is(WIKI_COMMAND_DESCRIPTION));
-        assertThat(request.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
+        assertThat(request.type(), is(ApplicationCommandOption.Type.SUB_COMMAND.getValue()));
         assertThat(request.options().get(), hasSize(1));
 
         ApplicationCommandOptionData raceOption = request.options().get().get(0);
         assertThat(raceOption.name(), is(QUERY_OPTION));
         assertThat(raceOption.description(), is(QUERY_OPTION_DESCRIPTION));
-        assertThat(raceOption.type(), is(ApplicationCommandOptionType.STRING.getValue()));
+        assertThat(raceOption.type(), is(ApplicationCommandOption.Type.STRING.getValue()));
         assertThat(raceOption.required().get(), is(true));
     }
 

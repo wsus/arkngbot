@@ -2,8 +2,10 @@ package org.arkngbot.services.impl;
 
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
-import discord4j.core.object.presence.Activity;
-import discord4j.core.object.presence.Presence;
+import discord4j.core.object.presence.ClientActivity;
+import discord4j.core.object.presence.ClientPresence;
+import discord4j.gateway.intent.Intent;
+import discord4j.gateway.intent.IntentSet;
 import org.arkngbot.eventprocessors.EventProcessor;
 import org.arkngbot.services.CoreService;
 import org.arkngbot.services.SlashCommandRegisterService;
@@ -31,10 +33,12 @@ public class CoreServiceImpl implements CoreService {
 
         GatewayDiscordClient client = DiscordClientBuilder.create(token)
                 .build()
+                .gateway()
+                .setEnabledIntents(IntentSet.of(Intent.GUILD_MEMBERS))
                 .login()
                 .block();
 
-        client.updatePresence(Presence.online(Activity.playing(STATUS_TEXT))).block();
+        client.updatePresence(ClientPresence.online(ClientActivity.playing(STATUS_TEXT))).block();
 
         slashCommandRegisterService.registerSlashCommands(client.getRestClient());
         eventProcessors.forEach(p -> p.processEvent(client));

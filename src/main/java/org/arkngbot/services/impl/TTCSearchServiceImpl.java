@@ -1,30 +1,29 @@
 package org.arkngbot.services.impl;
 
 import org.arkngbot.datastructures.TTCAutocompletionResult;
-import org.arkngbot.services.JsoupDocumentRetrievalService;
+import org.arkngbot.datastructures.TTCPriceCheckResult;
 import org.arkngbot.services.TTCSearchService;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Service
 public class TTCSearchServiceImpl implements TTCSearchService {
 
     private static final String SEARCH_RESULTS_URL = "https://eu.tamrieltradecentre.com/pc/Trade/SearchResult";
     private static final String REST_AUTOCOMPLETE_URL = "https://eu.tamrieltradecentre.com/api/pc/Trade/GetItemAutoComplete";
+    private static final String REST_PRICE_CHECK_URL = "https://eu.tamrieltradecentre.com/api/pc/Trade/PriceCheck";
     private static final String SEARCH_TYPE_SELL = "Sell";
     private static final String SEARCH_TYPE_PRICE_CHECK = "PriceCheck";
     private static final String NO_RESULTS_FOUND = "No results have been found.";
     private static final String RETURNING_SEARCH_RESULTS = "Returning search results for item %s:%n%s";
-    private static final String PRICE_CHECK_MESSAGE = "Price check for item %s:%nMinimum price: %s%nAverage price: %s%nMaximum price: %s%nSuggested price range: %s";
+    private static final String PRICE_CHECK_MESSAGE = "Price check for item %s:%nMinimum price: %,d%nAverage price: %,.2f%nMaximum price: %,d%nSuggested price range: %s";
     private static final String EMPTY_STRING = "";
-    private static final String GOLD_AMOUNT_CLASS = "gold-amount";
     private static final String NO_DATA_FOUND = "No data found.";
     private static final String TERM_PARAM = "term";
     private static final String SEARCH_TYPE_PARAM = "SearchType";
@@ -44,21 +43,20 @@ public class TTCSearchServiceImpl implements TTCSearchService {
     private static final String PRICE_MIN_PARAM = "PriceMin";
     private static final String PRICE_MAX_PARAM = "PriceMax";
     private static final String NOT_ENOUGH_DATA = "Not enough data";
-    private static final String SUGGESTED_PRICE = "%s - %s";
-    private static final String TRADE_LIST_TABLE = "trade-list-table";
-
-    private final JsoupDocumentRetrievalService jsoupDocumentRetrievalService;
+    private static final String SUGGESTED_PRICE = "%,.2f - %,.2f";
+    private static final int MIN_ENTRIES_FOR_SUGGESTED_PRICE = 10;
+    private static final double SUGGESTED_PRICE_UPPER_BOUND_FACTOR = 1.2;
 
     private final RestTemplate restTemplate;
 
     @Autowired
-    public TTCSearchServiceImpl(JsoupDocumentRetrievalService jsoupDocumentRetrievalService, RestTemplate restTemplate) {
-        this.jsoupDocumentRetrievalService = jsoupDocumentRetrievalService;
+    public TTCSearchServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    @NonNull
     @Override
-    public String search(String query) {
+    public String search(@NonNull String query) {
         TTCAutocompletionResult firstAutocompletionResult = retrieveFirstAutocompletionResult(query);
 
         if (firstAutocompletionResult == null) {
@@ -67,21 +65,22 @@ public class TTCSearchServiceImpl implements TTCSearchService {
 
         return String.format(RETURNING_SEARCH_RESULTS,
                 firstAutocompletionResult.getValue(),
-                buildSearchUrl(firstAutocompletionResult, SEARCH_TYPE_SELL));
+                buildSearchUrl(firstAutocompletionResult));
     }
 
+    @NonNull
     @Override
-    public String checkPrice(String query) throws IOException {
+    public String checkPrice(@NonNull String query) {
         TTCAutocompletionResult firstAutocompletionResult = retrieveFirstAutocompletionResult(query);
 
         if (firstAutocompletionResult == null) {
             return NO_RESULTS_FOUND;
         }
 
-        String searchUrl = buildSearchUrl(firstAutocompletionResult, SEARCH_TYPE_PRICE_CHECK);
+        String priceCheckUrl = buildUrlForPriceCheck(firstAutocompletionResult.getItemId());
 
-        Document priceCheckResult = jsoupDocumentRetrievalService.retrieve(searchUrl);
-        return processPriceCheckResult(priceCheckResult, firstAutocompletionResult.getValue());
+        TTCPriceCheckResult priceCheckResult = restTemplate.getForObject(priceCheckUrl, TTCPriceCheckResult.class);
+        return processPriceCheckResult(priceCheckResult);
     }
 
     private TTCAutocompletionResult retrieveFirstAutocompletionResult(String query) {
@@ -103,11 +102,11 @@ public class TTCSearchServiceImpl implements TTCSearchService {
                 .toUriString();
     }
 
-    private String buildSearchUrl(TTCAutocompletionResult autocompletionResult, String searchType) {
+    private String buildSearchUrl(TTCAutocompletionResult autocompletionResult) {
         Integer itemId = autocompletionResult.getItemId();
         String itemName = autocompletionResult.getValue();
         return UriComponentsBuilder.fromUriString(SEARCH_RESULTS_URL)
-                .queryParam(SEARCH_TYPE_PARAM, searchType)
+                .queryParam(SEARCH_TYPE_PARAM, SEARCH_TYPE_SELL)
                 .queryParam(ITEM_ID_PARAM, itemId)
                 .queryParam(ITEM_NAME_PATTERN_PARAM, itemName)
                 .queryParam(ITEM_CATEGORY_1_ID_PARAM, EMPTY_STRING)
@@ -125,34 +124,34 @@ public class TTCSearchServiceImpl implements TTCSearchService {
                 .toUriString();
     }
 
-    private String processPriceCheckResult(Document priceCheckResult, String itemName) {
-        Element table = priceCheckResult.getElementsByClass(TRADE_LIST_TABLE).stream()
-                .findFirst()
-                .orElse(null);
+    private String buildUrlForPriceCheck(Integer itemId) {
+        return UriComponentsBuilder.fromUriString(REST_PRICE_CHECK_URL)
+                .queryParam(SEARCH_TYPE_PARAM, SEARCH_TYPE_PRICE_CHECK)
+                .queryParam(ITEM_ID_PARAM, itemId)
+                .toUriString();
+    }
 
-        if (table == null) {
+    private String processPriceCheckResult(TTCPriceCheckResult priceCheckResult) {
+        TTCPriceCheckResult.PriceCheckEntry[] entries = priceCheckResult.getPriceCheckPageModel().getPriceCheckEntries();
+
+        if (entries == null || Arrays.stream(entries).allMatch(Objects::isNull)) {
             return NO_DATA_FOUND;
         }
 
-        Elements goldElements = table.getElementsByClass(GOLD_AMOUNT_CLASS);
-
-        return buildPriceCheckMessage(goldElements, itemName);
-    }
-
-    String buildPriceCheckMessage(Elements goldElements, String itemName) {
-        String minimum = goldElements.get(0).text();
-        String average = goldElements.get(1).text();
-        String maximum = goldElements.get(2).text();
-        String suggestedPriceRange = resolveSuggestedPrice(goldElements);
+        TTCPriceCheckResult.PriceCheckEntry firstEntry = entries[0];
 
         return String.format(PRICE_CHECK_MESSAGE,
-                itemName, minimum, average, maximum, suggestedPriceRange);
+                firstEntry.getName(),
+                firstEntry.getPriceMin(),
+                firstEntry.getPriceAvg(),
+                firstEntry.getPriceMax(),
+                resolveSuggestedPrice(firstEntry));
     }
 
-    private String resolveSuggestedPrice(Elements goldElements) {
-        if (goldElements.size() >= 5) {
-            String suggestedLower = goldElements.get(3).text();
-            String suggestedUpper = goldElements.get(4).text();
+    private String resolveSuggestedPrice(TTCPriceCheckResult.PriceCheckEntry firstEntry) {
+        if (firstEntry.getSuggestedPrice() != null && firstEntry.getEntryCount() >= MIN_ENTRIES_FOR_SUGGESTED_PRICE) {
+            double suggestedLower = firstEntry.getSuggestedPrice();
+            double suggestedUpper = suggestedLower * SUGGESTED_PRICE_UPPER_BOUND_FACTOR;
 
             return String.format(SUGGESTED_PRICE, suggestedLower, suggestedUpper);
         }

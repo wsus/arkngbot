@@ -1,4 +1,15 @@
 --------------------------------------
+Changelog for ArkngBot version 2.2
+--------------------------------------
+General:
+- Upgraded Discord4J version to 3.2.0, which runs on the v8 Discord gateway
+  (see https://docs.discord4j.com/versions/)
+
+Bug fixes:
+- Fixed the problem with /arkng ttc price returning blank values, which was caused by changes on TTC side.
+  Because of these changes, Arkng now connects to TTC's REST API instead of scraping the values from the page.
+
+--------------------------------------
 Changelog for ArkngBot version 2.1
 --------------------------------------
 Bug fixes:

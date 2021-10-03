@@ -1,8 +1,8 @@
 package org.arkngbot.commandprocessors;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.impl.VersionCommandProcessor;
 import org.arkngbot.services.impl.PropertiesSupport;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +62,6 @@ public class VersionCommandProcessorTest {
 
         assertThat(request.name(), is(VERSION_COMMAND));
         assertThat(request.description(), is(VERSION_COMMAND_DESCRIPTION));
-        assertThat(request.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
+        assertThat(request.type(), is(ApplicationCommandOption.Type.SUB_COMMAND.getValue()));
     }
 }
