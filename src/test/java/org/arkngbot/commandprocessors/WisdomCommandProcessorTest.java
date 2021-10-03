@@ -1,8 +1,8 @@
 package org.arkngbot.commandprocessors;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.impl.WisdomCommandProcessor;
 import org.arkngbot.services.UESPRandomLorebookParagraphExtractorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +71,6 @@ public class WisdomCommandProcessorTest {
 
         assertThat(request.name(), is(WISDOM_COMMAND));
         assertThat(request.description(), is(WISDOM_COMMAND_DESCRIPTION));
-        assertThat(request.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
+        assertThat(request.type(), is(ApplicationCommandOption.Type.SUB_COMMAND.getValue()));
     }
 }

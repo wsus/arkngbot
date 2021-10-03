@@ -2,14 +2,13 @@ package org.arkngbot.commandprocessors;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.impl.TtcCommandProcessor;
 import org.arkngbot.services.TTCSearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -89,8 +88,8 @@ public class TtcCommandProcessorTest {
     }
 
     @Test
-    public void shouldNotProcessCommandExceptionCaughtOnPriceCheck() throws Exception {
-        when(ttcSearchService.checkPrice(SEARCH_QUERY_CONVERTED)).thenThrow(new IOException());
+    public void shouldNotProcessCommandExceptionCaughtOnPriceCheck() {
+        when(ttcSearchService.checkPrice(SEARCH_QUERY_CONVERTED)).thenThrow(new RuntimeException());
 
         String result = commandProcessor.processCommand(buildCommand(TTC_PRICE, SEARCH_QUERY));
 
@@ -117,20 +116,20 @@ public class TtcCommandProcessorTest {
 
         assertThat(request.name(), is(TTC));
         assertThat(request.description(), is(TTC_DESCRIPTION));
-        assertThat(request.type(), is(ApplicationCommandOptionType.SUB_COMMAND_GROUP.getValue()));
+        assertThat(request.type(), is(ApplicationCommandOption.Type.SUB_COMMAND_GROUP.getValue()));
         assertThat(request.options().get(), hasSize(2));
 
         ApplicationCommandOptionData searchOption = request.options().get().get(0);
         assertThat(searchOption.name(), is(TTC_SEARCH));
         assertThat(searchOption.description(), is(SEARCH_DESCRIPTION));
-        assertThat(searchOption.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
+        assertThat(searchOption.type(), is(ApplicationCommandOption.Type.SUB_COMMAND.getValue()));
         assertThat(searchOption.required().isAbsent(), is(true));
         verifyQueryOption(searchOption.options().get().get(0));
 
         ApplicationCommandOptionData priceOption = request.options().get().get(1);
         assertThat(priceOption.name(), is(TTC_PRICE));
         assertThat(priceOption.description(), is(PRICE_DESCRIPTION));
-        assertThat(priceOption.type(), is(ApplicationCommandOptionType.SUB_COMMAND.getValue()));
+        assertThat(priceOption.type(), is(ApplicationCommandOption.Type.SUB_COMMAND.getValue()));
         assertThat(priceOption.required().isAbsent(), is(true));
         verifyQueryOption(priceOption.options().get().get(0));
     }
@@ -138,7 +137,7 @@ public class TtcCommandProcessorTest {
     private void verifyQueryOption(ApplicationCommandOptionData queryOption) {
         assertThat(queryOption.name(), is(QUERY_OPTION));
         assertThat(queryOption.description(), is(QUERY_OPTION_DESCRIPTION));
-        assertThat(queryOption.type(), is(ApplicationCommandOptionType.STRING.getValue()));
+        assertThat(queryOption.type(), is(ApplicationCommandOption.Type.STRING.getValue()));
         assertThat(queryOption.required().get(), is(true));
     }
 

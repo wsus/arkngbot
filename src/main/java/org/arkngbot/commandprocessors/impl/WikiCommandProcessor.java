@@ -2,8 +2,8 @@ package org.arkngbot.commandprocessors.impl;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.datastructures.UESPSearchResult;
 import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.UESPSearchService;
@@ -67,7 +67,7 @@ public class WikiCommandProcessor implements CommandProcessor {
         return ApplicationCommandOptionData.builder()
                 .name(WIKI_COMMAND)
                 .description(WIKI_COMMAND_DESCRIPTION)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .addOption(buildOption())
                 .build();
     }
@@ -76,7 +76,7 @@ public class WikiCommandProcessor implements CommandProcessor {
         return ApplicationCommandOptionData.builder()
                 .name(QUERY_OPTION)
                 .description(QUERY_OPTION_DESCRIPTION)
-                .type(ApplicationCommandOptionType.STRING.getValue())
+                .type(ApplicationCommandOption.Type.STRING.getValue())
                 .required(true)
                 .build();
     }

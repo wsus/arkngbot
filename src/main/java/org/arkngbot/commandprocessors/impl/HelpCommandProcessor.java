@@ -1,8 +1,8 @@
 package org.arkngbot.commandprocessors.impl;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.CommandProcessor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class HelpCommandProcessor implements CommandProcessor {
     public ApplicationCommandOptionData buildRequest() {
         return ApplicationCommandOptionData.builder()
                 .name(HELP)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .description(HELP_COMMAND_DESCRIPTION)
                 .build();
     }

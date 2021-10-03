@@ -1,8 +1,8 @@
 package org.arkngbot.commandprocessors.impl;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +49,7 @@ public class ServersCommandProcessor implements CommandProcessor {
     public ApplicationCommandOptionData buildRequest() {
         return ApplicationCommandOptionData.builder()
                 .name(SERVERS_COMMAND)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .description(SERVERS_COMMAND_DESCRIPTION)
                 .build();
     }

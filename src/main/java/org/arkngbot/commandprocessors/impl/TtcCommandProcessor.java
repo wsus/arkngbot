@@ -2,8 +2,8 @@ package org.arkngbot.commandprocessors.impl;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.arkngbot.commandprocessors.CommandProcessor;
 import org.arkngbot.services.TTCSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +95,7 @@ public class TtcCommandProcessor implements CommandProcessor {
         return ApplicationCommandOptionData.builder()
                 .name(TTC)
                 .description(TTC_DESCRIPTION)
-                .type(ApplicationCommandOptionType.SUB_COMMAND_GROUP.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND_GROUP.getValue())
                 .options(buildOptions())
                 .build();
     }
@@ -104,14 +104,14 @@ public class TtcCommandProcessor implements CommandProcessor {
         ApplicationCommandOptionData search = ApplicationCommandOptionData.builder()
                 .name(SEARCH_COMMAND)
                 .description(SEARCH_DESCRIPTION)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .addOption(buildQueryOption())
                 .build();
 
         ApplicationCommandOptionData price = ApplicationCommandOptionData.builder()
                 .name(PRICE_COMMAND)
                 .description(PRICE_DESCRIPTION)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .addOption(buildQueryOption())
                 .build();
 
@@ -122,7 +122,7 @@ public class TtcCommandProcessor implements CommandProcessor {
         return ApplicationCommandOptionData.builder()
                 .name(QUERY_OPTION_NAME)
                 .description(QUERY_OPTION_DESCRIPTION)
-                .type(ApplicationCommandOptionType.STRING.getValue())
+                .type(ApplicationCommandOption.Type.STRING.getValue())
                 .required(true)
                 .build();
     }

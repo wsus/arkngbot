@@ -2,8 +2,8 @@ package org.arkngbot.commandprocessors.impl;
 
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
-import discord4j.rest.util.ApplicationCommandOptionType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,7 +82,7 @@ public class NameCommandProcessor implements CommandProcessor {
         return ApplicationCommandOptionData.builder()
                 .name(NAME_COMMAND)
                 .description(NAME_COMMAND_DESCRIPTION)
-                .type(ApplicationCommandOptionType.SUB_COMMAND.getValue())
+                .type(ApplicationCommandOption.Type.SUB_COMMAND.getValue())
                 .addOption(buildOption(RACE_OPTION, RACE_OPTION_DESCRIPTION))
                 .addOption(buildOption(SEX_OPTION, SEX_OPTION_DESCRIPTION))
                 .build();
@@ -92,7 +92,7 @@ public class NameCommandProcessor implements CommandProcessor {
         return ApplicationCommandOptionData.builder()
                 .name(name)
                 .description(desc)
-                .type(ApplicationCommandOptionType.STRING.getValue())
+                .type(ApplicationCommandOption.Type.STRING.getValue())
                 .build();
     }
 
