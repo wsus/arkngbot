@@ -30,4 +30,14 @@ public interface CommandProcessor {
      */
     @NonNull
     ApplicationCommandOptionData buildRequest();
+
+    /**
+     * Indicates if the caller should be replied privately (in DM) instead of
+     * the channel where the command was issued from
+     *
+     * @return true if the caller should be replied in DM, false (default) otherwise
+     */
+    default boolean privateReply() {
+        return false;
+    }
 }

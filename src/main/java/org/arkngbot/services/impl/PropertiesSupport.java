@@ -27,6 +27,11 @@ public class PropertiesSupport {
     }
 
     public String getProperty(String key) {
-        return properties.getProperty(key);
+        String property = properties.getProperty(key);
+        // look in system props if not found
+        if (property == null) {
+           property = System.getProperty(key);
+        }
+        return property;
     }
 }

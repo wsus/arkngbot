@@ -32,6 +32,7 @@ public class CommandProcessingServiceTest {
         commandProcessorMock = mock(CommandProcessor.class);
         commandProcessingService = new CommandProcessingServiceImpl(Collections.singletonList(commandProcessorMock));
         when(commandProcessorMock.supports(WIKI)).thenReturn(true);
+        when(commandProcessorMock.privateReply()).thenReturn(true);
     }
 
     @Test
@@ -66,5 +67,17 @@ public class CommandProcessingServiceTest {
         when(firstOption.getName()).thenReturn(COMMAND_WIKI);
 
         assertThrows(IllegalArgumentException.class, () -> commandProcessingService.processCommand(acid));
+    }
+
+    @Test
+    public void shouldCheckPrivateReply() {
+        ApplicationCommandInteraction acid = mock(ApplicationCommandInteraction.class);
+        ApplicationCommandInteractionOption firstOption = mock(ApplicationCommandInteractionOption.class);
+        when(acid.getOptions()).thenReturn(Collections.singletonList(firstOption));
+        when(firstOption.getName()).thenReturn(COMMAND_WIKI);
+
+        boolean privateReply = commandProcessingService.checkPrivateReply(acid);
+
+        assertThat(privateReply, is(true));
     }
 }

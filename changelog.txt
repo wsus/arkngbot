@@ -1,4 +1,11 @@
 --------------------------------------
+Changelog for ArkngBot version 2.3
+--------------------------------------
+New features:
+- /arkng quest: New command for playing the New Life Treasure Hunt game (details will be posted
+  in relevant Discord servers
+
+--------------------------------------
 Changelog for ArkngBot version 2.2.1
 --------------------------------------
 General:
