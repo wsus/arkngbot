@@ -17,7 +17,7 @@ import java.security.GeneralSecurityException;
 @Service
 public class CryptoServiceImpl implements CryptoService {
 
-    private static final String ARKNGBOT_ENCRYPTIONKEY = "arkngbot.encryptionkey";
+    private static final String ARKNGBOT_ENCRYPTIONKEY = "ENCRYPTIONKEY";
 
     private PropertiesSupport propertiesSupport;
 
@@ -29,7 +29,7 @@ public class CryptoServiceImpl implements CryptoService {
     @NonNull
     @Override
     public String encrypt(@NonNull String plaintext) throws GeneralSecurityException, IOException {
-        String keyAsString = propertiesSupport.getProperty(ARKNGBOT_ENCRYPTIONKEY);
+        String keyAsString = propertiesSupport.getConfigVariable(ARKNGBOT_ENCRYPTIONKEY);
         KeysetHandle keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withString(keyAsString));
         Aead aead = keysetHandle.getPrimitive(Aead.class);
         byte[] encryptedBytes = aead.encrypt(plaintext.getBytes(StandardCharsets.UTF_8), null);
@@ -39,7 +39,7 @@ public class CryptoServiceImpl implements CryptoService {
     @NonNull
     @Override
     public String decrypt(@NonNull String ciphertext) throws GeneralSecurityException, IOException {
-        String keyAsString = propertiesSupport.getProperty(ARKNGBOT_ENCRYPTIONKEY);
+        String keyAsString = propertiesSupport.getConfigVariable(ARKNGBOT_ENCRYPTIONKEY);
         KeysetHandle keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withString(keyAsString));
         Aead aead = keysetHandle.getPrimitive(Aead.class);
 
