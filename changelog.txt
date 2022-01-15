@@ -1,4 +1,10 @@
 --------------------------------------
+Changelog for ArkngBot version 2.3.2
+--------------------------------------
+Bug fixes:
+- Fixed a bug where the quests.dat file would not be included in the final JAR which prevented
+  the quest command from working
+--------------------------------------
 Changelog for ArkngBot version 2.3.1
 --------------------------------------
 Bug fixes:
