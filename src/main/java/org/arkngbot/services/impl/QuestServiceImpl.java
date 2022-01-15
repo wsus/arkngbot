@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import static org.apache.logging.log4j.core.util.Loader.getClassLoader;
 
 @Service
 public class QuestServiceImpl implements QuestService {
@@ -21,7 +24,7 @@ public class QuestServiceImpl implements QuestService {
     private static final String QUESTS_FILE_NAME = "quests.dat";
     private static final String COULD_NOT_FIND_A_QUEST_FOR_THIS_NUMBER = "Could not find a quest for this number.";
     private static final String WRONG_ANSWER_PLEASE_TRY_AGAIN = "Wrong answer! Please try again.";
-    private static final String DELIMITER = "\\Z";
+    private static final String DELIMITER = "\n";
     private static final String CORRECT_RESPONSE_NEXT_QUEST_EXISTS = "Congratulations, you have answered correctly!\nHere is the question number %s:\n\n%s";
 
     private CryptoService cryptoService;
@@ -34,17 +37,16 @@ public class QuestServiceImpl implements QuestService {
     @NonNull
     @Override
     public String processRequest(long questionNumber, @NonNull String answer) throws Exception {
-        File questsFile = new File(ClassLoader.getSystemClassLoader().getResource(QUESTS_FILE_NAME).getFile());
-        Scanner scanner = new Scanner(questsFile).useDelimiter(DELIMITER);
+        BufferedReader reader = buildQuestFileReader();
         try {
-            String questsFileContent = scanner.next();
-            scanner.close();
+            String questsFileContent = reader.lines().collect(Collectors.joining("\n"));
+            reader.close();
             String questsJson = cryptoService.decrypt(questsFileContent);
             List<TreasureHuntingQuest> quests = marshalQuestsFile(questsJson);
 
             return processQuests(quests, questionNumber, answer);
         } catch (Exception e) {
-            scanner.close();
+            reader.close();
             throw e;
         }
     }
@@ -83,6 +85,11 @@ public class QuestServiceImpl implements QuestService {
         else {
             return currentQuest.getNextQuest();
         }
+    }
+
+    private BufferedReader buildQuestFileReader() {
+        InputStream stream = getClassLoader().getResourceAsStream(QUESTS_FILE_NAME);
+        return new BufferedReader(new InputStreamReader(stream));
     }
 
 }

@@ -6,7 +6,7 @@
 
     <groupId>org.arkngbot</groupId>
     <artifactId>arkngbot</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.3-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -99,14 +99,6 @@
                         <goal>shade</goal>
                     </goals>
                     <configuration>
-                        <filters>
-                            <filter>
-                                <artifact>arkngbot:arkngbot</artifact>
-                                <includes>
-                                    <include>quests.dat</include>
-                                </includes>
-                            </filter>
-                        </filters>
                         <transformers>
                             <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                 <mainClass>org.arkngbot.main.ArkngBot</mainClass>
