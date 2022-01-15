@@ -31,6 +31,14 @@ public class CommandProcessingServiceImpl implements CommandProcessingService {
                 .orElse(UNKNOWN_COMMAND);
     }
 
+    @Override
+    public boolean checkPrivateReply(ApplicationCommandInteraction acid) {
+        ApplicationCommandInteractionOption firstOption = retrieveFirstOption(acid);
+        return retrieveProcessor(firstOption.getName())
+                .map(CommandProcessor::privateReply)
+                .orElse(false);
+    }
+
     private Optional<CommandProcessor> retrieveProcessor(String mainCommandName) {
         return commandProcessors.stream()
                 .filter(proc -> proc.supports(mainCommandName))

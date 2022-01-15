@@ -24,7 +24,8 @@ public class HelpCommandProcessorTest {
             + "\n`/arkng pledges`: Shows the current Undaunted pledges."
             + "\n`/arkng luxury`: Shows the current luxury furnishings if they are available."
             + "\n`/arkng golden`: Shows the current golden merchant items if they are available."
-            + "\n`/arkng servers`: Displays the current status of the megaservers.";
+            + "\n`/arkng servers`: Displays the current status of the megaservers."
+            + "\n`/arkng quest <number> <answer>`: Attempt to answer a question for the New Life Treasure Hunting game.";
     private static final String HELP = "help";
     private static final String HELP_COMMAND_DESCRIPTION = "See a list of available commands";
     private static final String OTHER = "other";
