@@ -34,4 +34,9 @@ public class PropertiesSupport {
         }
         return property;
     }
+
+    public String getConfigVariable(String key) {
+        String variable = System.getenv(key);
+        return variable;
+    }
 }

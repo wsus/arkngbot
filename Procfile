@@ -1,1 +1,1 @@
-worker: java -Darkngbot.encryptionkey=$ENCRYPTIONKEY -jar target/arkngbot-2.3.jar $TOKEN
+worker: java -jar target/arkngbot-2.3.1.jar $TOKEN

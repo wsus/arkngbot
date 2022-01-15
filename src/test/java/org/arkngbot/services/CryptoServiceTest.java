@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 public class CryptoServiceTest {
 
     private static final String TEST_ENCRYPTION_KEY = "{\"primaryKeyId\":686584097,\"key\":[{\"keyData\":{\"typeUrl\":\"type.googleapis.com/google.crypto.tink.AesGcmKey\",\"value\":\"GiCq9BJhzf9tnxBC8aCi7P5jGuqhi4qksAmxbyr1xJOiDw==\",\"keyMaterialType\":\"SYMMETRIC\"},\"status\":\"ENABLED\",\"keyId\":686584097,\"outputPrefixType\":\"TINK\"}]}";
-    private static final String ARKNGBOT_ENCRYPTIONKEY = "arkngbot.encryptionkey";
+    private static final String ARKNGBOT_ENCRYPTIONKEY = "ENCRYPTIONKEY";
     private static final String TEST_PLAINTEXT = "[\n" +
             "  {\n" +
             "  \"number\": 1,\n" +
@@ -36,7 +36,7 @@ public class CryptoServiceTest {
     public void setUp() {
         propertiesSupportMock = mock(PropertiesSupport.class);
         cryptoService = new CryptoServiceImpl(propertiesSupportMock);
-        when(propertiesSupportMock.getProperty(ARKNGBOT_ENCRYPTIONKEY)).thenReturn(TEST_ENCRYPTION_KEY);
+        when(propertiesSupportMock.getConfigVariable(ARKNGBOT_ENCRYPTIONKEY)).thenReturn(TEST_ENCRYPTION_KEY);
     }
 
     @Test
