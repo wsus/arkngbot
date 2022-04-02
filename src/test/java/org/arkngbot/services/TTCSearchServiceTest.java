@@ -67,7 +67,7 @@ public class TTCSearchServiceTest {
     public void shouldReturnAPriceCheckResult() {
         TTCAutocompletionResult[] autocompletionResults = buildAutocompletionResults();
         when(restTemplate.getForObject(REST_URL, TTCAutocompletionResult[].class)).thenReturn(autocompletionResults);
-        TTCPriceCheckResult.PriceCheckEntry entry = mockEntryWithSuggestedPrice();
+        TTCPriceCheckResult.ItemDetailPricePair entry = mockEntryWithSuggestedPrice();
         when(restTemplate.getForObject(REST_PRICE_CHECK_URL, TTCPriceCheckResult.class)).thenReturn(buildPriceCheckResult(entry));
 
         String result = ttcSearchService.checkPrice(QUERY);
@@ -80,7 +80,7 @@ public class TTCSearchServiceTest {
     public void shouldReturnAPriceCheckResultWithoutSuggestedPrice() {
         TTCAutocompletionResult[] autocompletionResults = buildAutocompletionResults();
         when(restTemplate.getForObject(REST_URL, TTCAutocompletionResult[].class)).thenReturn(autocompletionResults);
-        TTCPriceCheckResult.PriceCheckEntry entry = mockEntryWithoutSuggestedPrice();
+        TTCPriceCheckResult.ItemDetailPricePair entry = mockEntryWithoutSuggestedPrice();
         when(restTemplate.getForObject(REST_PRICE_CHECK_URL, TTCPriceCheckResult.class)).thenReturn(buildPriceCheckResult(entry));
 
         String result = ttcSearchService.checkPrice(QUERY);
@@ -92,7 +92,7 @@ public class TTCSearchServiceTest {
     public void shouldReturnAPriceCheckResultWithoutSuggestedPriceTooFewEntries() {
         TTCAutocompletionResult[] autocompletionResults = buildAutocompletionResults();
         when(restTemplate.getForObject(REST_URL, TTCAutocompletionResult[].class)).thenReturn(autocompletionResults);
-        TTCPriceCheckResult.PriceCheckEntry entry = mockEntryWithTooFewEntriesForSuggestedPrice();
+        TTCPriceCheckResult.ItemDetailPricePair entry = mockEntryWithTooFewEntriesForSuggestedPrice();
         when(restTemplate.getForObject(REST_PRICE_CHECK_URL, TTCPriceCheckResult.class)).thenReturn(buildPriceCheckResult(entry));
 
         String result = ttcSearchService.checkPrice(QUERY);
@@ -130,46 +130,58 @@ public class TTCSearchServiceTest {
         return new TTCAutocompletionResult[] {result1, result2};
     }
 
-    private TTCPriceCheckResult buildPriceCheckResult(TTCPriceCheckResult.PriceCheckEntry entry) {
+    private TTCPriceCheckResult buildPriceCheckResult(TTCPriceCheckResult.ItemDetailPricePair entry) {
         TTCPriceCheckResult result = new TTCPriceCheckResult();
         TTCPriceCheckResult.PriceCheckPageModel model = new TTCPriceCheckResult.PriceCheckPageModel();
-        model.setPriceCheckEntries(new TTCPriceCheckResult.PriceCheckEntry[]{entry});
+        model.setItemDetailPricePairs(new TTCPriceCheckResult.ItemDetailPricePair[]{entry});
         result.setPriceCheckPageModel(model);
 
         return result;
     }
 
-    private TTCPriceCheckResult.PriceCheckEntry mockEntryWithSuggestedPrice() {
-        TTCPriceCheckResult.PriceCheckEntry entry = new TTCPriceCheckResult.PriceCheckEntry();
-        entry.setName(FULL_ITEM_NAME);
-        entry.setPriceMin(MINIMUM);
-        entry.setPriceMax(MAXIMUM);
-        entry.setPriceAvg(AVERAGE);
-        entry.setSuggestedPrice(SUGGESTED_LOWER);
-        entry.setEntryCount(ENTRY_COUNT_ENOUGH_FOR_SUGGESTED);
+    private TTCPriceCheckResult.ItemDetailPricePair mockEntryWithSuggestedPrice() {
+        TTCPriceCheckResult.ItemDetailPricePair entry = new TTCPriceCheckResult.ItemDetailPricePair();
+        TTCPriceCheckResult.ItemDetail itemDetail = new TTCPriceCheckResult.ItemDetail();
+        TTCPriceCheckResult.ItemPrice priceDetail = new TTCPriceCheckResult.ItemPrice();
+        itemDetail.setName(FULL_ITEM_NAME);
+        priceDetail.setPriceMin(MINIMUM);
+        priceDetail.setPriceMax(MAXIMUM);
+        priceDetail.setPriceAvg(AVERAGE);
+        priceDetail.setSuggestedPrice(SUGGESTED_LOWER);
+        priceDetail.setEntryCount(ENTRY_COUNT_ENOUGH_FOR_SUGGESTED);
+        entry.setItemDetail(itemDetail);
+        entry.setItemPrice(priceDetail);
 
         return entry;
     }
 
-    private TTCPriceCheckResult.PriceCheckEntry mockEntryWithoutSuggestedPrice() {
-        TTCPriceCheckResult.PriceCheckEntry entry = new TTCPriceCheckResult.PriceCheckEntry();
-        entry.setName(FULL_ITEM_NAME);
-        entry.setPriceMin(MINIMUM);
-        entry.setPriceMax(MAXIMUM);
-        entry.setPriceAvg(AVERAGE);
-        entry.setEntryCount(ENTRY_COUNT_ENOUGH_FOR_SUGGESTED);
+    private TTCPriceCheckResult.ItemDetailPricePair mockEntryWithoutSuggestedPrice() {
+        TTCPriceCheckResult.ItemDetailPricePair entry = new TTCPriceCheckResult.ItemDetailPricePair();
+        TTCPriceCheckResult.ItemDetail itemDetail = new TTCPriceCheckResult.ItemDetail();
+        TTCPriceCheckResult.ItemPrice priceDetail = new TTCPriceCheckResult.ItemPrice();
+        itemDetail.setName(FULL_ITEM_NAME);
+        priceDetail.setPriceMin(MINIMUM);
+        priceDetail.setPriceMax(MAXIMUM);
+        priceDetail.setPriceAvg(AVERAGE);
+        priceDetail.setEntryCount(ENTRY_COUNT_ENOUGH_FOR_SUGGESTED);
+        entry.setItemDetail(itemDetail);
+        entry.setItemPrice(priceDetail);
 
         return entry;
     }
 
-    private TTCPriceCheckResult.PriceCheckEntry mockEntryWithTooFewEntriesForSuggestedPrice() {
-        TTCPriceCheckResult.PriceCheckEntry entry = new TTCPriceCheckResult.PriceCheckEntry();
-        entry.setName(FULL_ITEM_NAME);
-        entry.setPriceMin(MINIMUM);
-        entry.setPriceMax(MAXIMUM);
-        entry.setPriceAvg(AVERAGE);
-        entry.setSuggestedPrice(SUGGESTED_LOWER);
-        entry.setEntryCount(ENTRY_COUNT_NOT_ENOUGH_FOR_SUGGESTED);
+    private TTCPriceCheckResult.ItemDetailPricePair mockEntryWithTooFewEntriesForSuggestedPrice() {
+        TTCPriceCheckResult.ItemDetailPricePair entry = new TTCPriceCheckResult.ItemDetailPricePair();
+        TTCPriceCheckResult.ItemDetail itemDetail = new TTCPriceCheckResult.ItemDetail();
+        TTCPriceCheckResult.ItemPrice priceDetail = new TTCPriceCheckResult.ItemPrice();
+        itemDetail.setName(FULL_ITEM_NAME);
+        priceDetail.setPriceMin(MINIMUM);
+        priceDetail.setPriceMax(MAXIMUM);
+        priceDetail.setPriceAvg(AVERAGE);
+        priceDetail.setSuggestedPrice(SUGGESTED_LOWER);
+        priceDetail.setEntryCount(ENTRY_COUNT_NOT_ENOUGH_FOR_SUGGESTED);
+        entry.setItemDetail(itemDetail);
+        entry.setItemPrice(priceDetail);
 
         return entry;
     }

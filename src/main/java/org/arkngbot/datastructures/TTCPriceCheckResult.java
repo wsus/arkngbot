@@ -34,17 +34,17 @@ public class TTCPriceCheckResult implements Serializable {
 
     public static class PriceCheckPageModel implements Serializable {
 
-        private PriceCheckEntry[] priceCheckEntries;
+        private ItemDetailPricePair[] itemDetailPricePairs;
         private int currentPage;
         private int totalPageCount;
         private int totalMatchCount;
 
-        public PriceCheckEntry[] getPriceCheckEntries() {
-            return priceCheckEntries;
+        public ItemDetailPricePair[] getItemDetailPricePairs() {
+            return itemDetailPricePairs;
         }
 
-        public void setPriceCheckEntries(PriceCheckEntry[] priceCheckEntries) {
-            this.priceCheckEntries = priceCheckEntries;
+        public void setItemDetailPricePairs(ItemDetailPricePair[] itemDetailPricePairs) {
+            this.itemDetailPricePairs = itemDetailPricePairs;
         }
 
         public int getCurrentPage() {
@@ -72,20 +72,32 @@ public class TTCPriceCheckResult implements Serializable {
         }
     }
 
-    public static class PriceCheckEntry implements Serializable {
+    public static class ItemDetailPricePair implements Serializable {
+        private ItemDetail itemDetail;
+        private ItemPrice itemPrice;
 
-        private int priceMax;
-        private int priceMin;
-        private double priceAvg;
-        private Double suggestedPrice;
-        private Integer entryCount;
-        private Integer amountCount;
+        public ItemDetail getItemDetail() {
+            return itemDetail;
+        }
+
+        public void setItemDetail(ItemDetail itemDetail) {
+            this.itemDetail = itemDetail;
+        }
+
+        public ItemPrice getItemPrice() {
+            return itemPrice;
+        }
+
+        public void setItemPrice(ItemPrice itemPrice) {
+            this.itemPrice = itemPrice;
+        }
+
+    }
+
+    public static class ItemDetail implements Serializable {
         private Integer category2Id;
         private String name;
-        private Boolean isChampionPoint;
-        private Integer level;
         private String iconName;
-        private Integer levelTotal;
         private Integer id;
         private String uid;
         private Integer qualityId;
@@ -93,30 +105,7 @@ public class TTCPriceCheckResult implements Serializable {
         private Integer traitId;
         private Integer[] potionEffectIds;
         private MasterWritInfo masterWritInfo;
-
-        public Double getSuggestedPrice() {
-            return suggestedPrice;
-        }
-
-        public void setSuggestedPrice(Double suggestedPrice) {
-            this.suggestedPrice = suggestedPrice;
-        }
-
-        public Integer getEntryCount() {
-            return entryCount;
-        }
-
-        public void setEntryCount(Integer entryCount) {
-            this.entryCount = entryCount;
-        }
-
-        public Integer getAmountCount() {
-            return amountCount;
-        }
-
-        public void setAmountCount(Integer amountCount) {
-            this.amountCount = amountCount;
-        }
+        private Integer levelTotal;
 
         public Integer getCategory2Id() {
             return category2Id;
@@ -132,22 +121,6 @@ public class TTCPriceCheckResult implements Serializable {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public Boolean getIsChampionPoint() {
-            return isChampionPoint;
-        }
-
-        public void setIsChampionPoint(Boolean championPoint) {
-            isChampionPoint = championPoint;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
         }
 
         public String getIconName() {
@@ -221,6 +194,39 @@ public class TTCPriceCheckResult implements Serializable {
         public void setMasterWritInfo(MasterWritInfo masterWritInfo) {
             this.masterWritInfo = masterWritInfo;
         }
+    }
+
+    public static class ItemPrice implements Serializable {
+        private int priceMax;
+        private int priceMin;
+        private double priceAvg;
+        private Double suggestedPrice;
+        private Integer entryCount;
+        private Integer amountCount;
+
+        public Double getSuggestedPrice() {
+            return suggestedPrice;
+        }
+
+        public void setSuggestedPrice(Double suggestedPrice) {
+            this.suggestedPrice = suggestedPrice;
+        }
+
+        public Integer getEntryCount() {
+            return entryCount;
+        }
+
+        public void setEntryCount(Integer entryCount) {
+            this.entryCount = entryCount;
+        }
+
+        public Integer getAmountCount() {
+            return amountCount;
+        }
+
+        public void setAmountCount(Integer amountCount) {
+            this.amountCount = amountCount;
+        }
 
         public int getPriceMax() {
             return priceMax;
@@ -245,7 +251,6 @@ public class TTCPriceCheckResult implements Serializable {
         public void setPriceAvg(double priceAvg) {
             this.priceAvg = priceAvg;
         }
-
     }
 
     public static class MasterWritInfo implements Serializable {
