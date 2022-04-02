@@ -132,25 +132,25 @@ public class TTCSearchServiceImpl implements TTCSearchService {
     }
 
     private String processPriceCheckResult(TTCPriceCheckResult priceCheckResult) {
-        TTCPriceCheckResult.PriceCheckEntry[] entries = priceCheckResult.getPriceCheckPageModel().getPriceCheckEntries();
+        TTCPriceCheckResult.ItemDetailPricePair[] entries = priceCheckResult.getPriceCheckPageModel().getItemDetailPricePairs();
 
         if (entries == null || Arrays.stream(entries).allMatch(Objects::isNull)) {
             return NO_DATA_FOUND;
         }
 
-        TTCPriceCheckResult.PriceCheckEntry firstEntry = entries[0];
+        TTCPriceCheckResult.ItemDetailPricePair firstEntry = entries[0];
 
         return String.format(PRICE_CHECK_MESSAGE,
-                firstEntry.getName(),
-                firstEntry.getPriceMin(),
-                firstEntry.getPriceAvg(),
-                firstEntry.getPriceMax(),
+                firstEntry.getItemDetail().getName(),
+                firstEntry.getItemPrice().getPriceMin(),
+                firstEntry.getItemPrice().getPriceAvg(),
+                firstEntry.getItemPrice().getPriceMax(),
                 resolveSuggestedPrice(firstEntry));
     }
 
-    private String resolveSuggestedPrice(TTCPriceCheckResult.PriceCheckEntry firstEntry) {
-        if (firstEntry.getSuggestedPrice() != null && firstEntry.getEntryCount() >= MIN_ENTRIES_FOR_SUGGESTED_PRICE) {
-            double suggestedLower = firstEntry.getSuggestedPrice();
+    private String resolveSuggestedPrice(TTCPriceCheckResult.ItemDetailPricePair firstEntry) {
+        if (firstEntry.getItemPrice().getSuggestedPrice() != null && firstEntry.getItemPrice().getEntryCount() >= MIN_ENTRIES_FOR_SUGGESTED_PRICE) {
+            double suggestedLower = firstEntry.getItemPrice().getSuggestedPrice();
             double suggestedUpper = suggestedLower * SUGGESTED_PRICE_UPPER_BOUND_FACTOR;
 
             return String.format(SUGGESTED_PRICE, suggestedLower, suggestedUpper);

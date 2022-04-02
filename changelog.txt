@@ -1,4 +1,9 @@
 --------------------------------------
+Changelog for ArkngBot version 2.3.5
+--------------------------------------
+Bug fixes:
+- /arkng ttc price: adjusted the call to match the current TTC API schema so that it works again
+--------------------------------------
 Changelog for ArkngBot version 2.3.4
 --------------------------------------
 Bug fixes:
